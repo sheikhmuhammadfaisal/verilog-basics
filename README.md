@@ -1,0 +1,2 @@
+# verilog-basics
+Self-Learning
