@@ -19,8 +19,21 @@ I tested the testbench by breaking the design on purpose (select 10 picked d1 in
 
 My first version had a width bug (`sel` was declared 1 bit instead of 2). A weak test with one data pattern passed it. The exhaustive test caught it with 16 failures out of 64.
 
+## Adders
+
+- `halfadder.v` : adds two bits (sum = a XOR b, carry = a AND b).
+- `tb_halfadder.v` : self-checking testbench, 4 tests.
+- `fulladder.v` : adds a, b and a carry-in (cin). Built from two half adders and an OR gate.
+- `tb_fulladder.v` : self-checking testbench, all 8 input combinations.
+- `adder4.v` : 4-bit adder made of 4 full adders in a row. The carry-out of each column feeds the carry-in of the next one.
+- `tb_adder4.v` : exhaustive self-checking testbench. 9 input bits (a[3:0], b[3:0], cin) give 512 tests, all passing.
+
+I tested the 4-bit adder testbench by breaking the design on purpose (wired column 2 to the wrong carry). Tests failed, as they should. After the fix, all 512 passed.
+
 ## How to run (example: 3:1 MUX)
 ```
 iverilog -o sim3s mux3to1.v tb_mux3to1_self.v
 vvp sim3s
+iverilog -o a4 adder4.v fulladder.v halfadder.v tb_adder4.v
+vvp a4
 ```
