@@ -30,10 +30,29 @@ My first version had a width bug (`sel` was declared 1 bit instead of 2). A weak
 
 I tested the 4-bit adder testbench by breaking the design on purpose (wired column 2 to the wrong carry). Tests failed, as they should. After the fix, all 512 passed.
 
-## How to run (example: 3:1 MUX)
+## ALU
+
+- `alu.v` : 4-bit ALU. A 2-bit `op` input selects the operation: 00 add, 01 subtract, 10 AND, 11 OR.
+- `tb_alu.v` : exhaustive self-checking testbench. 10 input bits (op, a, b) give 1024 tests, all passing.
+
+I tested the testbench by breaking the design on purpose (made AND behave like OR). 240 of 1024 tests failed, exactly as expected (256 AND tests minus the 16 where a equals b). After the fix, all 1024 passed.
+
+## How to run
+
+Example: 3:1 MUX
 ```
 iverilog -o sim3s mux3to1.v tb_mux3to1_self.v
 vvp sim3s
+```
+
+Example: 4-bit adder (needs all three design files)
+```
 iverilog -o a4 adder4.v fulladder.v halfadder.v tb_adder4.v
 vvp a4
+```
+
+Example: ALU
+```
+iverilog -o alu_sim alu.v tb_alu.v
+vvp alu_sim
 ```
